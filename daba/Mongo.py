@@ -91,13 +91,9 @@ class collection:
         return self.exec_operation(self.collection.count_documents, condition)
 
     def exec_operation(self, operation, *args):
-        response = None
         try:
             response = operation(*args)
         except Exception as e:
             self.logger.error(f"An error occurred: {e}")
             raise
-        finally:
-            if not response:  # only close the db connection if operation failed
-                self.close_db()
         return response

@@ -2,8 +2,6 @@
 
 The `daba` library, developed by Klivolks, is a Python package designed to simplify the process of interacting with MongoDB databases. It provides convenient and easy-to-use methods for carrying out common database operations such as querying, inserting, updating, and deleting data.
 
-The example above shows a `unittest` test suite for the various methods provided by the `daba` library.
-
 ## Installation
 
 This package can be installed using pip:
