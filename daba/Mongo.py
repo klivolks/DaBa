@@ -6,12 +6,19 @@ Improved db class.
 import pymongo
 import os
 from dotenv import load_dotenv
+import logging
 
 
 class collection:
     # Setting database
     def __init__(self, collection):
         self.collection = self.init_db(collection)
+        self.logger = logging.getLogger(__name__)
+        handler = logging.FileHandler('daba-error.log')
+        handler.setLevel(logging.ERROR)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
 
     def init_db(self, collection):
         load_dotenv()
@@ -86,8 +93,9 @@ class collection:
     def exec_operation(self, operation, *args):
         try:
             response = operation(*args)
-            self.close_db()
             return response
         except Exception as e:
-            print(f"An error occurred: {e}")
+            self.logger.error(f"An error occurred: {e}")
+            raise
+        finally:
             self.close_db()
