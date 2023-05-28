@@ -1,7 +1,7 @@
 import os
 import unittest
 from unittest.mock import patch, MagicMock
-from Database.Mongo import collection
+from daba.Mongo import collection
 from dotenv import load_dotenv
 
 
@@ -11,7 +11,7 @@ class TestDb(unittest.TestCase):
         cls.mongo_url = os.getenv('MONGO_URL')
         cls.mongo_db = os.getenv('MONGO_DB')
 
-    @patch('Database.Mongo.pymongo.MongoClient')
+    @patch('daba.Mongo.pymongo.MongoClient')
     def test_init_db(self, mock_client):
         mock_db = MagicMock()
         mock_client.return_value.__getitem__.return_value = mock_db
@@ -25,7 +25,7 @@ class TestDb(unittest.TestCase):
         self.assertTrue(mock_init.called)
 
     @patch.object(collection, 'close_db')
-    @patch('Database.Mongo.pymongo.collection.Collection.find')
+    @patch('daba.Mongo.pymongo.collection.Collection.find')
     def test_get(self, mock_find, mock_close_db):
         mock_find.return_value = [{'data': 'sample data'}]
         db_obj = collection('test')
