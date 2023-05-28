@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Database"
+version = "0.0.1"
+description = "A database handler."
+authors = [{name = "Vishnu Prakash", email = "vishnu@klivolks.com"}]
+homepage = "https://github.com/klivolks/Database"
+license = "GPL-3.0-or-later"
+
+[project.urls]
+Source = "https://github.com/klivolks/Database"
+
+[project.packages]
+include = [""]
+
+[compatibility]
+python = ["3.9", "3.11"]
+
+[project.classifiers]
+Development Status = [
+    "Development Status :: 3 - Alpha",
+]
+Intended Audience = [
+    "Intended Audience :: Developers",
+]
+License = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+Programming Language = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.11",
+]
