@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
 
+with open('README.md', 'r', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='daba',
-    version='0.0.1',
-    description='A database handler.',
+    version='0.0.2',
+    description='daba by Klivolks.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Vishnu Prakash',
     author_email='vishnu@klivolks.com',
     url='https://github.com/klivolks/Database',
