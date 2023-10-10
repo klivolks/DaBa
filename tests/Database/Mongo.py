@@ -10,6 +10,7 @@ class TestDb(unittest.TestCase):
     def setUpClass(cls):
         cls.mongo_url = os.getenv('MONGO_URL')
         cls.mongo_db = os.getenv('MONGO_DB')
+        cls.pool_size = os.getenv('MONGO_POOL_SIZE')
 
     @patch('daba.Mongo.pymongo.MongoClient')
     def test_init_db(self, mock_client):
@@ -31,7 +32,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.get({'condition': 'sample'})
         self.assertEqual(result, [{'data': 'sample data'}])
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.insert_one')
@@ -40,7 +40,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.put({'data': 'sample data'})
         self.assertEqual(result, {'_id': 'sample_id', 'data': 'sample data'})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.insert_many')
@@ -49,7 +48,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.putMany([{'data': 'sample data'}])
         self.assertEqual(result, [{'_id': 'sample_id', 'data': 'sample data'}])
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.update_one')
@@ -58,7 +56,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.set({'condition': 'sample'}, {'$set': {'data': 'new data'}})
         self.assertEqual(result, {'_id': 'sample_id', 'data': 'sample data'})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.update_one')
@@ -67,7 +64,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.inc({'Status': 1}, {'$inc': {'count': 1}})
         self.assertEqual(result, {"n": 1, "nModified": 1, "ok": 1.0, 'updatedExisting': True})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.update_many')
@@ -76,7 +72,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.setMany({'condition': 'sample'}, {'$set': {'data': 'new data'}})
         self.assertEqual(result, {"n": 1, "nModified": 1, "ok": 1.0, 'updatedExisting': True})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.find_one')
@@ -85,7 +80,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.getOne({'condition': 'sample'})
         self.assertEqual(result, {'_id': 'sample_id', 'data': 'sample data'})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.find_one_and_update')
@@ -94,7 +88,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.getAfterCount({'condition': 'sample'}, 'count')
         self.assertEqual(result, {'_id': 'sample_id', 'count': 1})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.delete_one')
@@ -103,7 +96,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.deleteOne({'condition': 'sample'})
         self.assertEqual(result, {"n": 1, "ok": 1.0})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.delete_many')
@@ -112,7 +104,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.deleteMany({'condition': 'sample'})
         self.assertEqual(result, {"n": 2, "ok": 1.0})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.update_many')
@@ -121,7 +112,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.removeElement({'condition': 'sample'}, {'field': 'element'})
         self.assertEqual(result, {"n": 2, "nModified": 2, "ok": 1.0, 'updatedExisting': True})
-        self.assertTrue(mock_close_db.called)
 
     @patch.object(collection, 'close_db')
     @patch('pymongo.collection.Collection.count_documents')
@@ -130,7 +120,6 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.count({'condition': 'sample'})
         self.assertEqual(result, 10)
-        self.assertTrue(mock_close_db.called)
 
 
 if __name__ == '__main__':
