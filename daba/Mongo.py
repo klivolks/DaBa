@@ -24,7 +24,8 @@ class collection:
         load_dotenv()
         mongo_url = os.environ.get('MONGO_URL')
         mongo_db = os.environ.get('MONGO_DB')
-        client = pymongo.MongoClient(mongo_url)
+        pool_size = os.environ.get('MONGO_POOL_SIZE') if os.environ.get('MONGO_POOL_SIZE') else 100
+        client = pymongo.MongoClient(mongo_url, maxPoolSize=pool_size)
         database = client[mongo_db]
         return database[collection]
 

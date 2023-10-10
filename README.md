@@ -17,6 +17,10 @@ Two environment variables need to be set:
 - `MONGO_URL`: This is the URL of the MongoDB server.
 - `MONGO_DB`: This is the name of the MongoDB database to interact with.
 
+And optional variables are
+
+- `MONGO_POOL_SIZE`: This is the default pool size of the MongoDB database.
+
 These can be set in an `.env` file that can be loaded with `python-dotenv`. Remember not to commit sensitive data (like your database URLs) to version control!
 
 ## Example usage
