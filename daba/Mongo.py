@@ -8,11 +8,16 @@ import os
 from dotenv import load_dotenv
 import logging
 
+load_dotenv()
+mongo_url = os.environ.get('MONGO_URL')
+pool_size = os.environ.get('MONGO_POOL_SIZE') if os.environ.get('MONGO_POOL_SIZE') else 100
+client = pymongo.MongoClient(mongo_url, maxPoolSize=pool_size)
+
 
 class collection:
     # Setting database
-    def __init__(self, collection):
-        self.collection = self.init_db(collection)
+    def __init__(self, collection_name):
+        self.collection = self.init_db(collection_name)
         self.logger = logging.getLogger(__name__)
         handler = logging.FileHandler('daba-error.log')
         handler.setLevel(logging.ERROR)
@@ -20,14 +25,10 @@ class collection:
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-    def init_db(self, collection):
-        load_dotenv()
-        mongo_url = os.environ.get('MONGO_URL')
-        mongo_db = os.environ.get('MONGO_DB')
-        pool_size = os.environ.get('MONGO_POOL_SIZE') if os.environ.get('MONGO_POOL_SIZE') else 100
-        client = pymongo.MongoClient(mongo_url, maxPoolSize=pool_size)
+    def init_db(self, collection_name, db=None):
+        mongo_db = db if db else os.environ.get('MONGO_DB')
         database = client[mongo_db]
-        return database[collection]
+        return database[collection_name]
 
     def close_db(self):
         self.collection.database.client.close()
