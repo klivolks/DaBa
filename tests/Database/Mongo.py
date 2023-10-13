@@ -1,8 +1,29 @@
 import os
 import unittest
 from unittest.mock import patch, MagicMock
-from daba.Mongo import collection
+from daba.Mongo import collection, new_client, reset_client
 from dotenv import load_dotenv
+
+
+class TestDbFunctions(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.mongo_url = os.getenv('MONGO_URL')
+        cls.pool_size = int(os.getenv('MONGO_POOL_SIZE') or 100)
+
+    @patch('daba.Mongo.pymongo.MongoClient.close')
+    @patch('daba.Mongo.pymongo.MongoClient.__init__', return_value=None)
+    def test_new_client(self, mock_client_init, mock_client_close):
+        new_client("new_mongo_url")
+        mock_client_close.assert_called_once()
+        mock_client_init.assert_called_once_with("new_mongo_url", maxPoolSize=int(self.pool_size))
+
+    @patch('daba.Mongo.pymongo.MongoClient.close')
+    @patch('daba.Mongo.pymongo.MongoClient.__init__', return_value=None)
+    def test_reset_client(self, mock_client_init, mock_client_close):
+        reset_client()
+        mock_client_close.assert_called_once()
+        mock_client_init.assert_called_once_with(self.mongo_url, maxPoolSize=int(self.pool_size))
 
 
 class TestDb(unittest.TestCase):
@@ -12,10 +33,15 @@ class TestDb(unittest.TestCase):
         cls.mongo_db = os.getenv('MONGO_DB')
         cls.pool_size = os.getenv('MONGO_POOL_SIZE')
 
-    @patch('daba.Mongo.pymongo.MongoClient')
+    @patch('daba.Mongo.client')
     def test_init_db(self, mock_client):
-        mock_db = MagicMock()
-        mock_client.return_value.__getitem__.return_value = mock_db
+        mock_database = MagicMock()
+        mock_collection = MagicMock()
+
+        # Setting up the mock to return our mock_database and mock_collection
+        mock_client.__getitem__.return_value = mock_database
+        mock_database.__getitem__.return_value = mock_collection
+
         db_obj = collection('test')
         self.assertIsInstance(db_obj.collection, MagicMock)
 

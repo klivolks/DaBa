@@ -10,20 +10,37 @@ import logging
 
 load_dotenv()
 mongo_url = os.environ.get('MONGO_URL')
-pool_size = os.environ.get('MONGO_POOL_SIZE') if os.environ.get('MONGO_POOL_SIZE') else 100
+pool_size = int(os.getenv('MONGO_POOL_SIZE') or 100)
 client = pymongo.MongoClient(mongo_url, maxPoolSize=pool_size)
+
+logger = logging.getLogger(__name__)
+if not logger.hasHandlers():
+    handler = logging.FileHandler('daba-error.log')
+    handler.setLevel(logging.ERROR)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+
+def new_client(connection_string):
+    global client
+    global pool_size
+    client.close()
+    client = pymongo.MongoClient(connection_string, maxPoolSize=pool_size)
+
+
+def reset_client():
+    global client
+    global mongo_url
+    global pool_size
+    client.close()
+    client = pymongo.MongoClient(mongo_url, maxPoolSize=pool_size)
 
 
 class collection:
     # Setting database
     def __init__(self, collection_name):
         self.collection = self.init_db(collection_name)
-        self.logger = logging.getLogger(__name__)
-        handler = logging.FileHandler('daba-error.log')
-        handler.setLevel(logging.ERROR)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
 
     def init_db(self, collection_name, db=None):
         mongo_db = db if db else os.environ.get('MONGO_DB')
@@ -96,6 +113,6 @@ class collection:
         try:
             response = operation(*args)
         except Exception as e:
-            self.logger.error(f"An error occurred: {e}")
+            logger.error(f"An error occurred: {e}")
             raise
         return response

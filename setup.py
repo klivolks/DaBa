@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='daba',
-    version='0.0.9',
+    version='0.0.10',
     description='daba by Klivolks.',
     long_description=long_description,
     long_description_content_type='text/markdown',
