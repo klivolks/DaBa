@@ -1,5 +1,6 @@
 import os
 import unittest
+from unittest import TestCase
 from unittest.mock import patch, MagicMock
 from daba.Mongo import collection, new_client, reset_client
 from dotenv import load_dotenv
@@ -146,6 +147,46 @@ class TestDb(unittest.TestCase):
         db_obj = collection('test')
         result = db_obj.count({'condition': 'sample'})
         self.assertEqual(result, 10)
+
+
+class TestDatabaseOperations(TestCase):
+
+    @patch.object(collection, 'create_index')
+    def test_create_index(self, mock_create_index):
+        # Define the expected return value
+        mock_create_index.return_value = 'index_name'
+
+        # Create a db_obj (assuming collection is a class for managing MongoDB operations)
+        db_obj = collection('test')
+
+        # Call the method to test
+        field = "username"
+        unique = True
+        index_name = db_obj.createIndex(field, unique=unique)
+
+        # Assert the mock was called with the correct parameters
+        mock_create_index.assert_called_once_with(field, unique=True)
+
+        # Assert the result is as expected
+        self.assertEqual(index_name, 'index_name')
+
+    @patch.object(collection, 'create_index')
+    def test_create_compound_index(self, mock_create_index):
+        # Define the expected return value for a compound index
+        mock_create_index.return_value = 'compound_index_name'
+
+        # Create a db_obj (assuming collection is a class for managing MongoDB operations)
+        db_obj = collection('test')
+
+        # Call the method to test for a compound index
+        compound_field = [("first_name", 1), ("last_name", 1)]
+        index_name = db_obj.createIndex(compound_field, unique=False)
+
+        # Assert the mock was called with the correct parameters (including default unique=False)
+        mock_create_index.assert_called_once_with(compound_field, unique=False)
+
+        # Assert the result is as expected
+        self.assertEqual(index_name, 'compound_index_name')
 
 
 if __name__ == '__main__':

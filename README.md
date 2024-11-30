@@ -51,6 +51,7 @@ Below are the methods available in the `daba` library's `collection` class, alon
 - `deleteMany(query)`: Deletes multiple documents that match the query.
 - `removeElement(query, element)`: Removes an element from an array in the documents that match the query.
 - `count(query)`: Counts the documents that match the query.
+- `createIndex(field, options)`: Creates index to the current table. Can use list of tuple of indexes or a single string.
 
 ## Running Tests
 
