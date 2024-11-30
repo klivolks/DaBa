@@ -104,10 +104,27 @@ class collection:
         return self.exec_operation(self.collection.update_many, condition, {"$unset": data}, False)
 
     def count(self, condition=None):
-        # Count the number of documents in the collection
+        """
+        Count the number of documents in the collection
+        :param condition: The query
+        :return: Total count of the document
+        """
         if condition is None:
             condition = {}
         return self.exec_operation(self.collection.count_documents, condition)
+
+    def createIndex(self, field, unique=False, **kwargs):
+        """
+        Create an index on the specified field using exec_operation.
+
+        :param field: The field to index (str or list of tuples for compound indexes).
+        :param unique: Whether the index should enforce uniqueness (default: False).
+        :param kwargs: Additional parameters to pass to the create_index method.
+        :return: The name of the created index.
+        """
+        index_options = {"unique": unique, **kwargs}
+        # Ensure the index creation passes unique by default
+        return self.collection.create_index(field, **index_options)
 
     def exec_operation(self, operation, *args):
         try:
