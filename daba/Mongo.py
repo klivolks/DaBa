@@ -39,8 +39,8 @@ def reset_client():
 
 class collection:
     # Setting database
-    def __init__(self, collection_name):
-        self.collection = self.init_db(collection_name)
+    def __init__(self, collection_name, db=None):
+        self.collection = self.init_db(collection_name, db)
 
     def init_db(self, collection_name, db=None):
         mongo_db = db if db else os.environ.get('MONGO_DB')
@@ -56,7 +56,7 @@ class collection:
             condition = {}
         return self.exec_operation(self.collection.find, condition, limiter)
 
-    def find(self, condition=None, limiter=None):
+    def find(self, condition=None):
         # Get all values from defined collection
         if condition is None:
             condition = {}

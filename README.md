@@ -1,6 +1,6 @@
 # daba by Klivolks
 
-The `daba` library, developed by Klivolks, is a Python package designed to simplify the process of interacting with MongoDB databases. It provides convenient and easy-to-use methods for carrying out common database operations such as querying, inserting, updating, and deleting data.
+The `daba` library, developed by Klivolks, is a Python package designed to simplify the process of interacting with databases. It provides convenient and easy-to-use methods for carrying out common database operations such as querying, inserting, updating, and deleting data. Primarily focused on Mongo is expected to grow to other Query languages.
 
 ## Installation
 
@@ -40,6 +40,7 @@ Below are the methods available in the `daba` library's `collection` class, alon
 - `init_db()`: Initializes the MongoDB database.
 - `close_db()`: Closes the MongoDB database connection.
 - `get(query)`: Returns documents that match the query.
+- `find(query)`: Aggregate function.
 - `put(data)`: Inserts a single document into the collection.
 - `putMany(data)`: Inserts multiple documents into the collection.
 - `set(query, new_data)`: Updates a single document that matches the query.
